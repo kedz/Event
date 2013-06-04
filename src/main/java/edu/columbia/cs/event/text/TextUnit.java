@@ -16,6 +16,9 @@ public class TextUnit implements Comparable<TextUnit> {
     private final int startPosition;
     private final int endPosition;
 
+    public TextUnit(String token, String documentId, int lineNumber, int wordIndex, int startPosition, int endPosition) {
+        this(token, documentId, lineNumber, wordIndex, startPosition, endPosition, false);
+    }
 
     public TextUnit(String token, String documentId, int lineNumber, int wordIndex, int startPosition, int endPosition, boolean intern) {
 
@@ -32,26 +35,6 @@ public class TextUnit implements Comparable<TextUnit> {
             this.documentId = documentId;
         }
 
-        this.lineNumber = lineNumber;
-        this.wordIndex = wordIndex;
-        this.startPosition = startPosition;
-        this.endPosition = endPosition;
-
-        if (getEndPosition() - getStartPosition() != getToken().length()
-                || getStartPosition() < 0
-                || getEndPosition() < 0)
-            throw new IllegalArgumentException("Invalid Start or End Position.");
-    }
-
-    public TextUnit(String token, String documentId, int lineNumber, int wordIndex, int startPosition, int endPosition) {
-
-        if (token == null)
-            throw new IllegalArgumentException("Argument 'token' cannot be null.");
-        if (documentId == null)
-            throw new IllegalArgumentException("Argument 'documentId' cannot be null.");
-
-        this.token = token;
-        this.documentId = documentId;
         this.lineNumber = lineNumber;
         this.wordIndex = wordIndex;
         this.startPosition = startPosition;
