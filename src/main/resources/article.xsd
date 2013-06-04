@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="file:///home/chris/event/eventschema.xml"
+           xmlns="file:///home/chris/event/eventschema.xml"
+           elementFormDefault="qualified">
+
+
+    <xs:element name="article" type="article-type"/>
+
+
+    <xs:complexType name="article-type">
+        <xs:sequence>
+            <xs:element name="url" type="xs:string"/>
+            <xs:element name="headline" type="xs:string"/>
+            <xs:element name="author" type="xs:string"/>
+            <xs:element name="publication" type="xs:string"/>
+            <xs:element name="date" type="xs:date"/>
+        </xs:sequence>
+        <xs:attribute name="id" type="xs:positiveInteger" use="required"/>
+    </xs:complexType>
+
+</xs:schema>
