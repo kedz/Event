@@ -1,6 +1,5 @@
 package edu.columbia.cs.event.text;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -37,9 +36,9 @@ public class TextUnitTest {
     }
 
     @Test
-    public void testGetWordIndex() throws Exception {
+    public void testGetTokenIndex() throws Exception {
         TextUnit tUnit = new TextUnit("token","docId",1,2,0,5);
-        assertEquals(2,tUnit.getWordIndex());
+        assertEquals(2,tUnit.getTokenIndex());
     }
 
     @Test

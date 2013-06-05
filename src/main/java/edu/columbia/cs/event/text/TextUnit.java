@@ -12,15 +12,15 @@ public class TextUnit implements Comparable<TextUnit> {
     private final String token;
     private final String documentId;
     private final int lineNumber;
-    private final int wordIndex;
+    private final int tokenIndex;
     private final int startPosition;
     private final int endPosition;
 
-    public TextUnit(String token, String documentId, int lineNumber, int wordIndex, int startPosition, int endPosition) {
-        this(token, documentId, lineNumber, wordIndex, startPosition, endPosition, false);
+    public TextUnit(String token, String documentId, int lineNumber, int tokenIndex, int startPosition, int endPosition) {
+        this(token, documentId, lineNumber, tokenIndex, startPosition, endPosition, false);
     }
 
-    public TextUnit(String token, String documentId, int lineNumber, int wordIndex, int startPosition, int endPosition, boolean intern) {
+    public TextUnit(String token, String documentId, int lineNumber, int tokenIndex, int startPosition, int endPosition, boolean intern) {
 
         if (token == null)
             throw new IllegalArgumentException("Argument 'token' cannot be null.");
@@ -36,7 +36,7 @@ public class TextUnit implements Comparable<TextUnit> {
         }
 
         this.lineNumber = lineNumber;
-        this.wordIndex = wordIndex;
+        this.tokenIndex = tokenIndex;
         this.startPosition = startPosition;
         this.endPosition = endPosition;
 
@@ -49,7 +49,7 @@ public class TextUnit implements Comparable<TextUnit> {
     public String getToken() {return token;}
     public String getDocumentId() {return documentId;}
     public int getLineNumber() {return lineNumber;}
-    public int getWordIndex() {return wordIndex;}
+    public int getTokenIndex() {return tokenIndex;}
     public int getStartPosition() {return startPosition;}
     public int getEndPosition() {return endPosition;}
 
@@ -65,9 +65,9 @@ public class TextUnit implements Comparable<TextUnit> {
             return -1;
         } else if (this.getLineNumber() > textUnit.getLineNumber()) {
             return 1;
-        } else if (this.getWordIndex() < textUnit.getWordIndex()) {
+        } else if (this.getTokenIndex() < textUnit.getTokenIndex()) {
             return -1;
-        } else if (this.getWordIndex() > textUnit.getWordIndex()) {
+        } else if (this.getTokenIndex() > textUnit.getTokenIndex()) {
             return 1;
         } else {
             return getToken().compareTo(textUnit.getToken());
@@ -77,7 +77,7 @@ public class TextUnit implements Comparable<TextUnit> {
 
     @Override
     public String toString() {
-        return "[ TextUnit: \""+getToken()+"\" DocId: "+documentId+" LineNum: "+lineNumber+" WordIndex: "+wordIndex+" StartPos: "+startPosition+" EndPos: "+endPosition+" ]";
+        return "[ TextUnit: \""+getToken()+"\" DocId: "+documentId+" LineNum: "+lineNumber+" TokenIndex: "+ tokenIndex +" StartPos: "+startPosition+" EndPos: "+endPosition+" ]";
     }
 
     @Override
@@ -90,7 +90,7 @@ public class TextUnit implements Comparable<TextUnit> {
         return getToken().equals(otherText.getToken())
                 && getDocumentId().equals(otherText.getDocumentId())
                 && getLineNumber() == otherText.getLineNumber()
-                && getWordIndex() == otherText.getWordIndex()
+                && getTokenIndex() == otherText.getTokenIndex()
                 && getStartPosition() == otherText.getStartPosition()
                 && getEndPosition() == otherText.getEndPosition();
 
@@ -98,7 +98,7 @@ public class TextUnit implements Comparable<TextUnit> {
 
     @Override
     public int hashCode() {
-        return (3359*getToken().hashCode())^(3361*getDocumentId().hashCode())^(3371*getLineNumber())^(3373*getWordIndex())^(3389*getStartPosition())^(3391*getEndPosition());
+        return (3359*getToken().hashCode())^(3361*getDocumentId().hashCode())^(3371*getLineNumber())^(3373* getTokenIndex())^(3389*getStartPosition())^(3391*getEndPosition());
     }
 
 }

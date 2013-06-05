@@ -133,14 +133,14 @@ public class TextUnitAnnotationTest {
     }
 
     /**
-     * Test getWordIndex getter
+     * Test getTokenIndex getter
      * @throws Exception
      */
     @Test
     public void testGetWordIndex() throws Exception {
         TextUnit textUnit = new TextUnit("token","docId",1,1,0,5);
         TextUnitAnnotation textUnitAnnotation = new TextUnitAnnotation(textUnit,"lemma","NN","O");
-        Assert.assertEquals(textUnit.getWordIndex(), textUnitAnnotation.getWordIndex());
+        Assert.assertEquals(textUnit.getTokenIndex(), textUnitAnnotation.getTokenIndex());
     }
 
     /**

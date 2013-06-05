@@ -52,7 +52,7 @@ public class TextUnitAnnotation implements Comparable<TextUnitAnnotation> {
     public String getToken() {return getTextUnit().getToken();}
     public String getDocumentId() {return getTextUnit().getDocumentId();}
     public int getLineNumber() {return getTextUnit().getLineNumber();}
-    public int getWordIndex() {return getTextUnit().getWordIndex();}
+    public int getTokenIndex() {return getTextUnit().getTokenIndex();}
     public int getStartPosition() {return getTextUnit().getStartPosition();}
     public int getEndPosition() {return getTextUnit().getEndPosition();}
 
