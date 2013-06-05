@@ -65,7 +65,7 @@ public class TextUnitTest {
         TextUnit tUnitE = new TextUnit("token","docId",1,2,0,5);
         TextUnit tUnitF = new TextUnit("token","docId",1,1,1,6);
 
-
+        // get around automatic compiler string intern for string literals appearing in code
         String aToken = "toke";
         aToken += "n";
         TextUnit tUnitG = new TextUnit(aToken,"docId",1,1,0,5);

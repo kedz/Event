@@ -9,7 +9,7 @@ import edu.columbia.cs.event.text.TextUnit;
  * Time: 3:50 PM
  * To change this template use File | Settings | File Templates.
  */
-public class TextUnitAnnotation {
+public class TextUnitAnnotation implements Comparable<TextUnitAnnotation> {
 
     private final String lemma;
     private final String pos;
@@ -49,6 +49,58 @@ public class TextUnitAnnotation {
     public String getPos() {return pos;}
     public String getNe() {return ne;}
     public TextUnit getTextUnit() {return textUnit;}
+    public String getToken() {return getTextUnit().getToken();}
+    public String getDocumentId() {return getTextUnit().getDocumentId();}
+    public int getLineNumber() {return getTextUnit().getLineNumber();}
+    public int getWordIndex() {return getTextUnit().getWordIndex();}
+    public int getStartPosition() {return getTextUnit().getStartPosition();}
+    public int getEndPosition() {return getTextUnit().getEndPosition();}
 
+    @Override
+    public int compareTo(TextUnitAnnotation other) {
+        if (other==null)
+            return 1;
+
+        int textUnitResult = this.getTextUnit().compareTo(other.getTextUnit());
+        if (textUnitResult != 0)
+            return textUnitResult;
+
+        int lemmaResult = this.getLemma().compareTo(other.getLemma());
+        if (lemmaResult != 0)
+            return lemmaResult;
+
+        int posResult = this.getPos().compareTo(other.getPos());
+        if (posResult != 0)
+            return posResult;
+
+        return this.getNe().compareTo(other.getNe());
+
+    }
+
+
+    @Override
+    public String toString() {
+        return "[ TextUnitAnnotation: "+textUnit.toString()+" Lemma: "+lemma+" Pos: "+pos+" Ne: "+ne+" ]";
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (other==null)
+            return false;
+        if (!(other instanceof TextUnitAnnotation))
+            return false;
+        TextUnitAnnotation otherAnnotation = (TextUnitAnnotation) other;
+
+        return getLemma().equals(otherAnnotation.getLemma())
+                && getPos().equals(otherAnnotation.getPos())
+                && getNe().equals(otherAnnotation.getNe())
+                && getTextUnit().equals(otherAnnotation.getTextUnit());
+
+    }
+
+    @Override
+    public int hashCode() {
+        return (6229*getLemma().hashCode())^(6247*getPos().hashCode())^(6257*getNe().hashCode())^(6263*getTextUnit().hashCode());
+    }
 
 }
