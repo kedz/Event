@@ -1,7 +1,10 @@
 package edu.columbia.cs.event.nlp;
 
+import edu.columbia.cs.event.EventConfiguration;
 import edu.columbia.cs.event.RawArticle;
+import edu.columbia.cs.event.annotation.TextUnitAnnotation;
 import edu.columbia.cs.event.text.RawLine;
+import edu.columbia.cs.event.text.TextUnit;
 import edu.stanford.nlp.ling.CoreAnnotations;
 import edu.stanford.nlp.ling.CoreLabel;
 import edu.stanford.nlp.pipeline.Annotation;
@@ -31,6 +34,10 @@ public class RawArticlePreProcessor {
 
     public void process(RawArticle unprocessedArticle) {
 
+        boolean useIntern = EventConfiguration.getInstance().getUseStringIntern();
+
+
+
         for(RawLine rawLine : unprocessedArticle.getRawLines()) {
 
             Annotation lineAnnotation = new Annotation(rawLine.getLineText());
@@ -39,18 +46,15 @@ public class RawArticlePreProcessor {
             List<CoreMap> sentences = lineAnnotation.get(CoreAnnotations.SentencesAnnotation.class);
 
             for(CoreMap sentence: sentences) {
+
+                int tokenIndex = 1;
+
                 for (CoreLabel token: sentence.get(CoreAnnotations.TokensAnnotation.class)) {
-                    // this is the text of the token
-                    String word = token.word();
-                    // this is the POS tag of the token
-                    String pos = token.tag();
-                    // this is the NER label of the token
-                    String ne = token.ner();
-                    // this is the lemma of the token
-                    String lemma = token.lemma();
-                    System.out.println(rawLine.getDocumentId()+":"+rawLine.getLineNumber()+":"+token.sentIndex()+":"+word+":"+pos+":"+ne+":"+lemma+":"+token.beginPosition()+":"+token.endPosition());
 
-
+                    TextUnit textUnit = new TextUnit(token.originalText(),rawLine.getDocumentId(),rawLine.getLineNumber(), tokenIndex, token.beginPosition(), token.endPosition(), useIntern);
+                    TextUnitAnnotation textUnitAnnotation = new TextUnitAnnotation(textUnit,token.lemma(),token.tag(),token.ner(), useIntern);
+                    tokenIndex++;
+                    System.out.println(textUnitAnnotation);
 
                 }
 
