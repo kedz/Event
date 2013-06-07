@@ -1,6 +1,5 @@
 package edu.columbia.cs.event.annotation;
 
-import edu.columbia.cs.event.annotation.TextUnitAnnotation;
 import java.util.ArrayList;
 
 /**
@@ -80,7 +79,35 @@ public class SentenceAnnotation implements Comparable<SentenceAnnotation> {
         return output;
     }
 
+    @Override
+    public boolean equals (Object other) {
+        if (other == null)
+            return false;
+        if (!(other instanceof SentenceAnnotation))
+            return false;
+        SentenceAnnotation otherAnnotation = (SentenceAnnotation) other;
 
+        return this.getDocumentId().equals(otherAnnotation.getDocumentId())
+                && this.getLineNumber() == (otherAnnotation.getLineNumber())
+                && this.getSentenceIndex() == (otherAnnotation.getSentenceIndex())
+                && this.length() == (otherAnnotation.length())
+                && equalsAnnotationList(otherAnnotation);
+    }
 
+    public boolean equalsAnnotationList (SentenceAnnotation other) {
+        for (int i=0; i<this.length(); i++) {
+            if (!this.getTextUnitAntList().get(i).equals(other.getTextUnitAntList().get(i)))
+                return false;
+        }
+        return true;
+    }
 
+    @Override
+    public int hashCode() {
+        int code = (4157*getDocumentId().hashCode())^(4159*getLineNumber())^(4177*getSentenceIndex());
+        for (TextUnitAnnotation textUnitAnnotation : textUnitAnnotationList) {
+            code = code^(textUnitAnnotation.hashCode());
+        }
+    return code;
+    }
 }
