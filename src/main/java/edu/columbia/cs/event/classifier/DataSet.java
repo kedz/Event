@@ -16,9 +16,11 @@ import java.util.*;
 public class DataSet {
 
     private List<DataPoint> dataPointList = new ArrayList<DataPoint>();
-    private Map<Integer,List<DataPoint>> activeFeatureToDataPointsMap = new HashMap<Integer, List<DataPoint>>();
+    private Map<Integer,Set<DataPoint>> activeFeatureToDataPointsMap = new HashMap<Integer, Set<DataPoint>>();
+    private Map<Integer,Set<SparseBinaryFeatureVector>> activeFeatureToContextsMap = new HashMap<Integer, Set<SparseBinaryFeatureVector>>();
     private Integer numFeatures;
-    private Set<Integer> labels;
+    private Set<Integer> labels = new HashSet<Integer>();
+    Map<DataPoint,Integer> dataPointCounts = new HashMap<DataPoint, Integer>();
 
     //Empirical Distributions
     private Map<DataPoint,Double> empiricalJointDistribution = new HashMap<DataPoint, Double>();
@@ -33,7 +35,7 @@ public class DataSet {
     private void loadTrainingData(File trainingDataFile, File labelDataFile) throws Exception {
 
         //Empirical Counts for P~(x,y)
-        Map<DataPoint,Integer> dataPointCounts = new HashMap<DataPoint, Integer>();
+
         //Marginal Counts for P~(x)
         Map<SparseBinaryFeatureVector,Integer> marginalFeatureSetCounts = new HashMap<SparseBinaryFeatureVector, Integer>();
 
@@ -55,7 +57,7 @@ public class DataSet {
                  *  2: This is a unique(so far) context/label pair. Create a new DataPoint instance.
                  *
                  *  Either way, the following need to be done:
-                 *      A: Add this point to the list associated with each active feature (activeFeatureToDataPointsMap
+                 *      A: Add this point to the set associated with each active feature (activeFeatureToDataPointsMap
                  *      B: Increment empirical joint counts for a context/label pair (dataPointCounts)
                  *      C: Increment empirical marginal counts for a context (marginalFeatureSetCounts)
                  *      D: Add DataPoint to grand total list of DataPoints (dataPointList)
@@ -66,9 +68,10 @@ public class DataSet {
                     //Grab cached DataPoint instance
                     DataPoint dataPoint = cachedDataPoints.get(label+":"+featureString);
 
-                    // Part A
+                    // Part A  -- redundant now
                     for(Integer featureIndex : dataPoint.getActiveFeatures()) {
                         activeFeatureToDataPointsMap.get(featureIndex).add(dataPoint);
+                        activeFeatureToContextsMap.get(featureIndex).add(dataPoint.getFeatureVector());
                     }
 
                     // Part B
@@ -81,7 +84,6 @@ public class DataSet {
 
                     // Part D
                     dataPointList.add(dataPoint);
-                    System.out.println(dataPoint+":"+dataPointCountPlusOne+":"+marginalCountPlusOne);
 
                 } else {
 
@@ -107,9 +109,13 @@ public class DataSet {
                             dataPoint.activateFeature(i);
 
                             if (!activeFeatureToDataPointsMap.containsKey(i)) {
-                                activeFeatureToDataPointsMap.put(i,new LinkedList<DataPoint>());
+                                activeFeatureToDataPointsMap.put(i,new HashSet<DataPoint>());
+                                activeFeatureToContextsMap.put(i,new HashSet<SparseBinaryFeatureVector>());
+
                             }
                             activeFeatureToDataPointsMap.get(i).add(dataPoint);
+                            activeFeatureToContextsMap.get(i).add(dataPoint.getFeatureVector());
+
 
                         }
 
@@ -152,11 +158,11 @@ public class DataSet {
             empiricalMarginalDistribution.put(featureVector,prob);
         }
         for(int featureIndex = 0; featureIndex < numFeatures; featureIndex++) {
-            List<DataPoint> dataPointsForFeature = activeFeatureToDataPointsMap.get(featureIndex);
+            Set<DataPoint> dataPointsForFeature = activeFeatureToDataPointsMap.get(featureIndex);
             double expectedValue = 0.0;
 
             for(DataPoint dataPoint : dataPointsForFeature) {
-                expectedValue += empiricalJointDistribution.get(dataPoint);
+                expectedValue += empiricalJointDistribution.get(dataPoint);//*dataPointCounts.get(dataPoint);
             }
 
             expectedFeatureCount.put(featureIndex,expectedValue);
@@ -187,7 +193,28 @@ public class DataSet {
         return getEmpiricalMarginalProbability(dataPoint.getFeatureVector());
     }
 
-    public Set<SparseBinaryFeatureVector> getContexts() {return getEmpiricalMarginalDistribution().keySet();}
     public Set<Integer> getLabels() {return labels;}
+
+
+    public Set<DataPoint> getDataPointsWithFeature(int featureIndex) {
+        if (activeFeatureToDataPointsMap.containsKey(featureIndex)) {
+            return activeFeatureToDataPointsMap.get(featureIndex);
+        } else
+            return new HashSet<DataPoint>();
+    }
+
+    public Set<SparseBinaryFeatureVector> getContextsWithFeature(int featureIndex) {
+        if (activeFeatureToContextsMap.containsKey(featureIndex))
+            return activeFeatureToContextsMap.get(featureIndex);
+        else
+            return new HashSet<SparseBinaryFeatureVector>();
+    }
+
+    public int getDataPointCount(DataPoint aPoint) {
+        if (dataPointCounts.containsKey(aPoint))
+            return dataPointCounts.get(aPoint);
+        else
+            return 0;
+    }
 
 }

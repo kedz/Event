@@ -15,6 +15,16 @@ public class DataPoint {
     private Integer label = null;
     private SparseBinaryFeatureVector featureVector = new SparseBinaryFeatureVector();
 
+    public DataPoint(Integer label, SparseBinaryFeatureVector featureVector, int numFeatures) {
+        this.label = label;
+        if (featureVector != null)
+            this.featureVector = featureVector;
+        else
+            this.featureVector = new SparseBinaryFeatureVector();
+        this.numFeatures = numFeatures;
+    }
+
+
     public DataPoint(int numFeatures) {
         this.numFeatures = numFeatures;
     }
